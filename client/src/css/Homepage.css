@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&display=swap');
+
+
+.picture-homepage{
+    background-image: url("../assets/River\ image.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.homepage-box{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.inner-homepage{
+    padding:7px;
+    width: 30%;
+    color: white;
+}
+
+.homepage-des{
+    font-size: 23px;
+    font-weight: 700;
+    text-align: justify;
+}
+
+.title-home{
+   height: 150px;
+}
+
+.signup{
+    width:300px;
+}
+
+.login-box{
+    display: inline-block;
+
+}
+
+.signup-box{
+    display: inline-block;
+
+}
