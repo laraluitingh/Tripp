@@ -11,6 +11,13 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import logo from '../assets/logo.png'
+import axios from 'axios';
+import { Link as LinkRouter } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+
+
 
 function Copyright(props) {
   return (
@@ -28,15 +35,40 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUp() {
+
+const [errorMessage, setErrorMessage] = useState("");
+const navigate = useNavigate();
+
+
+
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
-    console.log({
+    const name=data.get('firstName')+" "+data.get('lastName')
+    const insertData={
+      name: name,
       email: data.get('email'),
       password: data.get('password'),
-    });
+    };
+
+    axios.post('/user/signup', insertData).then((res) => {
+      const passed=res.data.status
+      const message=res.data.message
+      if(passed==="Failed"){
+        setErrorMessage(message)
+      }else if(passed==="Success"){
+        navigate("/signIn")
+
+      }
+      
+    }).catch(err => {
+      console.log(err);
+    })
   };
+
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -51,7 +83,12 @@ export default function SignUp() {
           }}
         >
           <Box>
-          <img src={logo} className="logo-sign-in"></img>
+          <img src={logo} className="logo-sign-in" alt="logo"></img>
+          </Box>
+          <Box>
+            <p id="errorMessage">
+              {errorMessage}
+            </p>
           </Box>
           <Typography component="h1" variant="h5">
             Sign up
@@ -117,8 +154,8 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
-                  Already have an account? Sign in
+                <Link variant="body2">
+                  <LinkRouter to="/signIn">Already have an account? Sign in</LinkRouter>
                 </Link>
               </Grid>
             </Grid>

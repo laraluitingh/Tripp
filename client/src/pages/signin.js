@@ -12,9 +12,14 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import '../css/signUp.css'
 import logo from '../assets/logo.png'
+import { useState } from 'react';
+import axios from 'axios';
+import { Link as LinkRouter } from 'react-router-dom';
 
 
 function Copyright(props) {
+
+  
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
@@ -29,15 +34,35 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-function SignIn() {
+function SignIn(props) {
+  const { isLoggedIn, setIsLoggedIn } = props;
+
+  const [errorMessage, setErrorMessage] = useState("");
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
-    console.log({
+    const checkData={
       email: data.get('email'),
       password: data.get('password'),
-    });
+    };
+
+  axios.post('/user/signin', checkData).then((res) => {
+      console.log(res.data)
+      const passed=res.data.status
+      const message=res.data.message
+      const errorMessage=document.getElementById('errorMessage')
+      console.log(errorMessage)
+      if(passed==="Failed"){
+        setErrorMessage(message)
+      }else if(passed==="Success"){
+        setErrorMessage(message)
+        setIsLoggedIn(true);
+      }
+      
+    }).catch(err => {
+      console.log(err);
+    })
   };
 
   return (
@@ -53,7 +78,12 @@ function SignIn() {
           }}
         >
           <Box>
-          <img src={logo} className="logo-sign-in"></img>
+          <img src={logo} className="logo-sign-in" alt="logo"></img>
+          </Box>
+          <Box>
+            <p id="errorMessage">
+              {errorMessage}
+            </p>
           </Box>
           <Typography component="h1" variant="h5">
             Sign in
@@ -98,8 +128,8 @@ function SignIn() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                <Link variant="body2">
+                  <LinkRouter to="/signup">Don't have an account? Sign Up</LinkRouter>
                 </Link>
               </Grid>
             </Grid>
@@ -110,5 +140,8 @@ function SignIn() {
     </ThemeProvider>
   );
 }
+
+
+
 
 export default SignIn;

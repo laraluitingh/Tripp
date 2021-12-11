@@ -7,6 +7,11 @@ const session = require('express-session');
 var MongoDBStore = require('connect-mongodb-session')(session);
 require('dotenv').config()
 const mongoose = require ('mongoose')
+const cors = require('cors');
+
+app.use(express.static("./client/build"));
+
+app.use(express.json())
 
 mongoose.connect( process.env.MONGODB_URI, {
     useNewUrlParser: true,
@@ -26,6 +31,7 @@ const store= new MongoDBStore({
 app.use(session({
   secret: "key that will sign cookie",
   resave: false,
+  httpOnly: false,
   saveUninitialized: false,
   store: store
 }))
@@ -35,6 +41,16 @@ app.use(bodyParser())
 const UserRouter = require('./api/user')
 
 app.use('/user', UserRouter)
+
+app.use(cors());
+
+app.use('/login', (req, res) => {
+  res.send({
+    token: 'test123'
+  });
+});
+
+
 
 
 app.listen(port, () => {

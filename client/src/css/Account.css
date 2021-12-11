@@ -1,0 +1,9 @@
+.picture-homepage{
+    background-image: url("../assets/River\ image.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+}
