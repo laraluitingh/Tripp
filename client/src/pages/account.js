@@ -15,9 +15,9 @@ function Account() {
 
   return (
     <>
-      <di>
+      <div>
         <div className="background-account">{userInformation}</div>
-      </di>
+      </div>
     </>
   );
 }

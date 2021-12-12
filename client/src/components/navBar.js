@@ -33,20 +33,30 @@ function NavBar(props) {
           <img src={logo} className="logo-nav-bar" alt="logo"></img>
           </Typography>
           <nav>
-            <Link
+            {
+              props.isLoggedIn
+              ?<Link
+              variant="button"
+              color="text.primary"
+              sx={{ my: 1, mx: 1.5 }}>
+              <LinkRouter to="/dashboard">Dashboard</LinkRouter>
+            </Link>
+            :<p></p>
+            }
+
+            {
+              props.isLoggedIn
+              ?<Link
               variant="button"
               color="text.primary"
               sx={{ my: 1, mx: 1.5 }}
             >
-              <LinkRouter to="/places">Attractions</LinkRouter>
+              <LinkRouter to="/calender">Chat rooms</LinkRouter>
             </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              <LinkRouter to="/calender">Calender</LinkRouter>
-            </Link>
+            :<p></p>
+            
+            }
+
             {
               props.isLoggedIn 
               ?<Link

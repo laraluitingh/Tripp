@@ -8,10 +8,17 @@ var MongoDBStore = require('connect-mongodb-session')(session);
 require('dotenv').config()
 const mongoose = require ('mongoose')
 const cors = require('cors');
+const morgan=require('morgan')
+const bodyParser2=reequire('bodyparser')
+const path= require('path')
+
 
 app.use(express.static("./client/build"));
 
 app.use(express.json())
+
+const UserRouter = require('./api/user')
+const PostRouter= require('./api/post')
 
 mongoose.connect( process.env.MONGODB_URI, {
     useNewUrlParser: true,
@@ -38,17 +45,12 @@ app.use(session({
 
 app.use(bodyParser())
 
-const UserRouter = require('./api/user')
+
 
 app.use('/user', UserRouter)
+app.use('/post', PostRouter)
 
 app.use(cors());
-
-app.use('/login', (req, res) => {
-  res.send({
-    token: 'test123'
-  });
-});
 
 
 

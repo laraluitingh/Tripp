@@ -20,9 +20,7 @@ function Homepage() {
             <img src={logo} className="title-home" alt="logo"/>
           <div className="homepage-des">
             <p>
-              Excited for an upcoming trip but not so sure what you wanna do?
-              Use trippo to find popular locations and restaurnts you would like
-              to visit. Signup to plan your next trip.
+              A place for like minded world travellers to get travelling tips from one another
             </p>
           </div>
           <Box className="sign-up-box">

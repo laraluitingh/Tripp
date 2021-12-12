@@ -4,6 +4,7 @@ const router = express.Router();
 const User = require("./../models/User");
 
 const bcrypt = require("bcrypt");
+const mongoose = require ('mongoose')
 
 router.post("/signup", (req, res) => {
   console.log(req.body);
@@ -51,7 +52,6 @@ router.post("/signup", (req, res) => {
                   res.json({
                     status: "Success",
                     message: "Sign up completed",
-                    data: result,
                   });
                 })
                 .catch((err) => {
@@ -98,17 +98,15 @@ router.post("/signin", (req, res) => {
           .compare(password, hashedPassword)
           .then((result) => {
             if (result) {
-              req.session.email= data[0].email;
+              req.session.userId= data[0]._id.toString();
               res.json({
                 status: "Success",
                 message: "Signin Succesful",
-                data: data,
               });
             } else {
               res.json({
                 status: "Failed",
                 message: "Incorrect Password",
-                data: data,
               });
             }
           })
@@ -138,7 +136,7 @@ router.post("/signin", (req, res) => {
 
 router.get('/session', (req,res)=>{
 
-  if(req.session.email){
+  if(req.session.userId){
     res.status(200).send()
   }else{
     res.status(401).send()
@@ -148,8 +146,8 @@ router.get('/session', (req,res)=>{
 }) 
 
 router.get('/information', (req,res)=>{
-  const email=req.session.email
-  User.find({email}).then((data)=>{
+  const email=req.session.userId
+  User.find({"_id": mongoose.Types.ObjectId(email)}).then((data)=>{
     res.json({
       information: data
     }) 

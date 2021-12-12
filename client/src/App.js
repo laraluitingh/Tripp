@@ -11,7 +11,7 @@ import SignUp from './pages/signup'
 import SignIn from './pages/signin';
 import Calender from './pages/calender';
 import Account from './pages/account';
-import VisitPlaces from './pages/places';
+import Dashboard from "./pages/dashboard";
 import NavBar from './components/navBar';
 
 import './css/App.css';
@@ -48,7 +48,7 @@ function App() {
        <Route path="signIn" element={<SignIn loggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>}/>
        <Route path="account" element={<Account/>}/>
        <Route path="calender" element={<Calender/>}/>
-       <Route path="places" element={<VisitPlaces/>}/>
+       <Route path="dashboard" element={<Dashboard/>}/>
      </Routes>
    </Router>
    </>
