@@ -8,9 +8,6 @@ var MongoDBStore = require('connect-mongodb-session')(session);
 require('dotenv').config()
 const mongoose = require ('mongoose')
 const cors = require('cors');
-const morgan=require('morgan')
-const bodyParser2=reequire('bodyparser')
-const path= require('path')
 
 
 app.use(express.static("./client/build"));
@@ -19,6 +16,8 @@ app.use(express.json())
 
 const UserRouter = require('./api/user')
 const PostRouter= require('./api/post')
+const CommentRouter= require('./api/comment')
+const LikeRouter= require('./api/like')
 
 mongoose.connect( process.env.MONGODB_URI, {
     useNewUrlParser: true,
@@ -30,7 +29,7 @@ mongoose.connect( process.env.MONGODB_URI, {
 })
 
 const store= new MongoDBStore({
-  uri : process.env.MONGODB_URI,
+  uri : process.env.MONGODB_URI, 
   collection: 'Mysessions'
   
 })
@@ -49,10 +48,11 @@ app.use(bodyParser())
 
 app.use('/user', UserRouter)
 app.use('/post', PostRouter)
+app.use('/comment', CommentRouter)
+app.use('/like', LikeRouter)
+
 
 app.use(cors());
-
-
 
 
 app.listen(port, () => {

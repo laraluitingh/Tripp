@@ -3,9 +3,16 @@ const Schema = mongoose.Schema
 
 const CommentSchema = new Schema(
     {
-        userEmail:{
-            type:String,
-            required: true
+        userId:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+        },
+
+        postId:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Post',
+            required: true,
         },
 
         body:{
@@ -17,7 +24,7 @@ const CommentSchema = new Schema(
 
         time:{
             type: Date,
-        }
+        }, 
 
     },
 
@@ -27,3 +34,5 @@ const CommentSchema = new Schema(
 const Comment = mongoose.model('Comment', CommentSchema)
 
 module.exports = Comment;
+
+

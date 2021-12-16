@@ -1,0 +1,16 @@
+
+
+.AllPosts{
+    display: flex;
+    justify-content: center;
+
+}
+
+#comment{
+    display: flex;
+    align-items: stretch;
+}
+
+div#post{
+    width: 40%;
+}

@@ -147,6 +147,7 @@ router.get('/session', (req,res)=>{
 
 router.get('/information', (req,res)=>{
   const email=req.session.userId
+  console.log(email)
   User.find({"_id": mongoose.Types.ObjectId(email)}).then((data)=>{
     res.json({
       information: data

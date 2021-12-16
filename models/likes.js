@@ -4,13 +4,15 @@ const Schema = mongoose.Schema
 const LikesSchema = new Schema(
     {
         userId:{
-            type:String,
-            required: true
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
         },
 
         postId:{
-            type:String,
-            required: true
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Post',
+            required: true,
 
         },
     
