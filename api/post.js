@@ -38,7 +38,7 @@ router.post("/", (req, res)=>{
           console.log(newPost)
 
           newPost.save().then((result) => {
-           console.log("succes")
+            res.status(201).send()
             }).catch(err=>{
                 res.json({
                     status: "Failed",

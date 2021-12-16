@@ -13,6 +13,7 @@ import '../css/navBar.css';
 
 
 function NavBar(props) {
+  
 
 
   // axios.get('/user/session').then((res)=>{

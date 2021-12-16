@@ -7,6 +7,7 @@ const user= require("./../models/User");
 
 router.post("/", (req, res)=>{
     console.log(`Here is the body ${req.body}`)
+
     let { postId ,body, time } = req.body;
     const userId=req.session.userId
 
@@ -23,7 +24,6 @@ router.post("/", (req, res)=>{
           })
 
     }else{
-      console.log("got here")
 
         const newComment = new Comment({
         postId,
@@ -32,10 +32,8 @@ router.post("/", (req, res)=>{
             time,
           });
 
-          console.log(newComment)
-
           newComment.save().then((result) => {
-           console.log("succes")
+            res.status(201).send()
             }).catch(err=>{
                 res.json({
                     status: "Failed",

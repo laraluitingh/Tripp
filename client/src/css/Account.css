@@ -1,9 +1,21 @@
-.picture-homepage{
-    background-image: url("../assets/River\ image.png");
+.backgound-account{
+    background-image: url("../assets/Account-Abstract.png");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     height: 100vh;
     color: white;
     font-family: 'Open Sans', sans-serif;
+}
+
+.profile{
+    width: 450px;
+    height: fit-content
+}
+
+.profile-box{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 87vh;
 }

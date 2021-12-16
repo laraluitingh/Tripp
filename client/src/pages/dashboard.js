@@ -76,11 +76,11 @@ if(searchValue!==""){
     </Paper>
    </Box>
    {allPost.map(function(object, i){
-     return <PostCard obj={object} key={i}/>
+     return <PostCard obj={object} key={i} />
         // return <PostCard  />;
     })}
   
-     {isOpen && <Popup handleClose={togglePopup}/>}
+     {isOpen && <Popup handleClose={togglePopup} allPost={allPost} setallPost={setallPost}/>}
   
    </>
   );

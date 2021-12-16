@@ -14,7 +14,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { TextField } from "@mui/material";
+import { getSelectUtilityClasses, TextField } from "@mui/material";
 import { Button } from "@mui/material";
 import { useState, useEffect } from "react";
 import List from "@mui/material/List";
@@ -51,34 +51,28 @@ export default function PostCard(props) {
     const time = new Date().toISOString();
     const postId = postObject._id;
 
-    fetch("/comment", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        postId,
-        body,
-        time,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) {
-          console.log("error");
-        } else {
-          console.log("succes");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+
+    const commentForm={
+        postId: postId,
+        body: body,
+        time: time,
+      };
+
+
+
+      axios
+  .post('/comment', commentForm )
+  .then(() => {
+    console.log("success")
+    return axios.get(`/comment/${postObject._id}`);
+  })
+  .then(res => {
+    setComments(res.data.result)
+  })
+
   };
 
   useEffect(() => {
-    // make an axios call to determine if the user is logged in
-    // this function will only be called once
-    // once you get a response, setIsLoggedIn(response.???)
     axios.get(`/comment/${postObject._id}`).then( (res)=>{
       setComments(res.data.result)
 
