@@ -4,13 +4,15 @@ import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import axios from "axios";
+import CloseIcon from '@mui/icons-material/Close';
 
 const Popup = (props) => {
   const [body, setBody] = useState("");
   const [image, setImage] = useState("");
   const { allPost, setallPost } = props;
+  const [imageUpload, setImageUpload]=useState("No image, chosen yet")
 
   function findHashtags(searchText) {
     var regexp = /(\s|^)\#\w\w+\b/gm;
@@ -26,37 +28,20 @@ const Popup = (props) => {
     }
   }
 
+  const realFileBtn = document.getElementById("real-file");
+
+const hiddenFileInput = React.useRef(null);
+
+const handleClick = event => {
+  hiddenFileInput.current.click();
+};
 
 
-  // useEffect(() => {
-  //   const tags = findHashtags(body);
-  //   const time = new Date().toISOString();
-
-
-  //   const postForm = {
-  //     body: body,
-  //     img: url,
-  //     tags: tags,
-  //     time: time
-  //   };
-
-  //   axios
-  //     .post("/post", postForm)
-  //     .then(() => {
-  //       console.log("success");
-  //       return axios.get(`/post`);
-  //     })
-  //     .then((res) => {
-  //       setallPost(res.data.result);
-  //       props.handleClose()
-  
-  //     });
-  // }, [url]);
-
-
-
-
-
+const handleChange = event => {
+  console.log(event.target.files[0])
+  setImage(event.target.files[0])
+  setImageUpload(event.target.files[0].name)
+};
 
   const postDetails = () => {
 
@@ -139,7 +124,7 @@ const Popup = (props) => {
   function deleteImage() {
     document.getElementById("myInputFileID").value = null;
     setImage("NoImg");
-    console.log(image);
+    setImageUpload("No Image chosen yet")
   }
 
 
@@ -150,7 +135,7 @@ const Popup = (props) => {
     <div className="popup-box">
       <div className="box">
         <span className="close-icon" onClick={props.handleClose}>
-          x
+          <CloseIcon className="exit"/>
         </span>
         <FormControl style={{ width: "100%" }}>
           <TextField
@@ -158,7 +143,7 @@ const Popup = (props) => {
             id="standard-multiline-static"
             label="What's on your mind?"
             multiline
-            rows={4}
+            rows={13}
             onChange={(e) => {
               setBody(e.target.value);
             }}
@@ -170,12 +155,17 @@ const Popup = (props) => {
           <input
             type="file"
             id="myInputFileID"
-            onChange={(e) => setImage(e.target.files[0])}
+            hidden="hidden"
+            accept="image/png, image/gif, image/jpeg"
+            ref={hiddenFileInput}
+            onChange={handleChange}
           />
+           <Button variant="text" id="custom-button" onClick={handleClick} >Choose an image</Button> <span id="custom-text">{imageUpload}</span>
           <a
             onClick={() => {
               deleteImage();
             }}
+            className="delete-button"
           >
             Delete
           </a>

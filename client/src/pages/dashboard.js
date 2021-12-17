@@ -11,6 +11,8 @@ import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 
+import "../css/dashboard.css";
+
 
 function Dashboard() {
   const [isOpen, setIsOpen] = useState(false);
@@ -56,12 +58,14 @@ if(searchValue!==""){
 
 
   return (
-   <>
+   <div className="backgound-dashboard">
+     <div className="AllPosts">
    <Box>
    <Button variant="text" onClick={togglePopup}>Create a Post</Button>
    <Paper
       component="form"
       sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}
+      className="search-hashtag"
     >
       <InputBase
         sx={{ ml: 1, flex: 1 }}
@@ -75,6 +79,7 @@ if(searchValue!==""){
       </IconButton>
     </Paper>
    </Box>
+   </div>
    {allPost.map(function(object, i){
      return <PostCard obj={object} key={i} />
         // return <PostCard  />;
@@ -82,7 +87,7 @@ if(searchValue!==""){
   
      {isOpen && <Popup handleClose={togglePopup} allPost={allPost} setallPost={setallPost}/>}
   
-   </>
+   </div>
   );
 }
 

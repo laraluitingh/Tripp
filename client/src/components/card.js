@@ -9,7 +9,7 @@ import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { red } from "@mui/material/colors";
+import { blue } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -126,9 +126,7 @@ export default function PostCard(props) {
       <Card sx={{ mb: 3 }} id="post">
         <CardHeader
           avatar={
-            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-              R
-            </Avatar>
+            <Avatar alt={postObject.userId.name} src="/static/images/avatar/1.jpg" />
           }
           action={
             <IconButton aria-label="settings">
@@ -141,6 +139,7 @@ export default function PostCard(props) {
 
         {postObject.img !== "" && (
           <CardMedia
+            className="image-post"
             component="img"
             height="194"
             image={postObject.img}
@@ -164,6 +163,7 @@ export default function PostCard(props) {
           <TextField
             id="outlined-basic"
             variant="outlined"
+            size="small"
             sx={{ ml: 1 }}
             style={{ width: "80%" }}
             onChange={(e) => {
@@ -172,9 +172,10 @@ export default function PostCard(props) {
             value={body}
           />{" "}
           <Button
-            variant="contained"
+            variant="outlined"
             sx={{ ml: 1 }}
             onClick={() => postDetails()}
+            className="comment-button"
           >
             Comment
           </Button>
@@ -201,11 +202,11 @@ export default function PostCard(props) {
                 maxHeight: 350,
               }}
             >
-            {comment.map(function(object, i){
-                console.log(object)
+            {comment.length!==0 
+            ? comment.map(function(object, i){
                 return <Comment obj={object} key={i}/>
-                   // return <PostCard  />;
-               })}
+               })
+               :<p>No comments</p>}
             </List>
           </CardContent>
         </Collapse>

@@ -9,8 +9,20 @@
 #comment{
     display: flex;
     align-items: stretch;
+    margin-right:8px;
 }
 
 div#post{
-    width: 40%;
+    width: 35%;
 }
+
+.image-post{
+    height: fit-content;
+}
+
+@media screen and (max-width: 800px) {
+    div#post{
+      width: 80%
+    }
+  }
+

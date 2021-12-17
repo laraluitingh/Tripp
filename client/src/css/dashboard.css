@@ -1,0 +1,26 @@
+
+
+.AllPosts{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 17px;
+
+}
+
+.backgound-dashboard{
+    background-image: url("../assets/dashboard-img.png");
+    background-size: 100%;
+    min-height:100vh;
+    font-family: 'Open Sans', sans-serif;
+    background-attachment: scroll;
+
+}
+
+
+
+
+@media screen and (max-width: 600px) {
+    .search-hashtag{
+        max-width: 300px;
+    }
+  }

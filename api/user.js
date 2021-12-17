@@ -157,4 +157,10 @@ router.get('/information', (req,res)=>{
   
 })
 
+
+router.delete("/", (req, res) => {
+  req.session.destroy();
+  res.status(200).send()
+});
+
 module.exports = router;

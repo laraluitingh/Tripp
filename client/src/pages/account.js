@@ -7,9 +7,13 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import "../css/Account.css";
+import { useNavigate } from 'react-router-dom';
 
-function Account() {
+function Account(props) {
   const [userInformation, setUserInformation] = useState("");
+  const navigate = useNavigate();
+  const { isLoggedIn, setIsLoggedIn } = props;
+
 
   useEffect(() => {
     axios.get(`/user/information`).then((res) => {
@@ -17,6 +21,25 @@ function Account() {
       setUserInformation(res.data.information[0])
     });
   }, []);
+
+  function logOut(){
+    axios.delete('/user').then(()=>{
+      console.log("succes")
+      
+      return axios('/user/session')
+
+    }).then( ()=>{
+      setIsLoggedIn(true)
+      navigate('/')
+
+    }
+    ).catch((err)=>{
+      setIsLoggedIn(false)
+      navigate('/')
+
+    })
+
+  }
 
   return (
     <div className="backgound-account">
@@ -42,7 +65,7 @@ function Account() {
         <Button color="primary">Edit</Button>
       </CardActions>
       <CardActions>
-      <Button variant="outlined">Log out</Button>
+      <Button variant="outlined" onClick={logOut}>Log out</Button>
       </CardActions>
     </Card>
     </div>

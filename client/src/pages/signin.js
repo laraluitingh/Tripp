@@ -15,6 +15,7 @@ import logo from '../assets/logo.png'
 import { useState } from 'react';
 import axios from 'axios';
 import { Link as LinkRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 function Copyright(props) {
@@ -36,6 +37,7 @@ const theme = createTheme();
 
 function SignIn(props) {
   const { isLoggedIn, setIsLoggedIn } = props;
+  const navigate = useNavigate();
 
   const [errorMessage, setErrorMessage] = useState("");
   const handleSubmit = (event) => {
@@ -58,6 +60,7 @@ function SignIn(props) {
       }else if(passed==="Success"){
         setErrorMessage(message)
         setIsLoggedIn(true);
+        navigate('/dashboard')
       }
       
     }).catch(err => {
