@@ -1,6 +1,6 @@
 # Trippo
 
-Social Media application for world travellors to share their experericnes and connect with another. Optimised for mobile
+Social Media application for world travellers to share their experericnes and connect with another. Optimised for mobile
 
 ## Features
 
