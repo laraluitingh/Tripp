@@ -46,19 +46,6 @@ router.post("/", (req, res)=>{
 })
 
 
-// router.get("/", (req, res)=>{
-//  Comment.find().sort({time: -1}).populate({path:'userId', select:['name']}).then((result) => {
-//   res.json({
-//     result
-//   }) 
-//    }).catch(err=>{
-//        res.json({
-//            status: "Failed",
-//            message: "Issue occured when comment was created",
-//          });
-//    })
-// })
-
 router.get("/:postID", (req, res)=>{
     const postID=req.params.postID
     Comment.find({"postId": postID}).populate({path:'userId', select:['name']}).then((result) => {

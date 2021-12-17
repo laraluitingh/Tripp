@@ -10,6 +10,8 @@ router.post("/", (req, res)=>{
     let { body, img, tags, time } = req.body;
     const userId=req.session.userId
 
+    body=body.replace(/\n/g, "<br/>");;
+
     if( body.length>1000){
         res.json({
             status: "Failed",

@@ -4,7 +4,8 @@ const router = express.Router();
 const User = require("./../models/User");
 
 const bcrypt = require("bcrypt");
-const mongoose = require ('mongoose')
+const mongoose = require("mongoose");
+const ObjectId=mongoose.ObjectId
 
 router.post("/signup", (req, res) => {
   console.log(req.body);
@@ -91,76 +92,104 @@ router.post("/signin", (req, res) => {
       message: "Input field is empty",
     });
   } else {
-    User.find({ email }).then((data) => {
-      if (data.length) {
-        const hashedPassword = data[0].password;
-        bcrypt
-          .compare(password, hashedPassword)
-          .then((result) => {
-            if (result) {
-              req.session.userId= data[0]._id.toString();
-              res.json({
-                status: "Success",
-                message: "Signin Succesful",
-              });
-            } else {
+    User.find({ email })
+      .then((data) => {
+        if (data.length) {
+          const hashedPassword = data[0].password;
+          bcrypt
+            .compare(password, hashedPassword)
+            .then((result) => {
+              if (result) {
+                req.session.userId = data[0]._id.toString();
+                res.json({
+                  status: "Success",
+                  message: "Signin Succesful",
+                });
+              } else {
+                res.json({
+                  status: "Failed",
+                  message: "Incorrect Password",
+                });
+              }
+            })
+            .catch((err) => {
+              console.log(err);
               res.json({
                 status: "Failed",
-                message: "Incorrect Password",
+                message: "Error occurred while comparing passwords",
               });
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-            res.json({
-              status: "Failed",
-              message: "Error occurred while comparing passwords",
             });
+        } else {
+          res.json({
+            status: "Failed",
+            Message: "Invalid login credentials provided",
           });
-      } else {
+        }
+      })
+      .catch((err) => {
         res.json({
           status: "Failed",
-          Message: "Invalid login credentials provided",
+          Message: "Error occured while checking for existing user",
         });
-      }
-    }).catch(err=>{
-        res.json({
-            status: "Failed",
-            Message: "Error occured while checking for existing user",
-          });
-
-
-    });
+      });
   }
 });
 
-router.get('/session', (req,res)=>{
-
-  if(req.session.userId){
-    res.status(200).send()
-  }else{
-    res.status(401).send()
-
+router.get("/session", (req, res) => {
+  if (req.session.userId) {
+    res.status(200).send();
+  } else {
+    res.status(401).send();
   }
+});
 
-}) 
-
-router.get('/information', (req,res)=>{
-  const email=req.session.userId
-  console.log(email)
-  User.find({"_id": mongoose.Types.ObjectId(email)}).then((data)=>{
+router.get("/information", (req, res) => {
+  const email = req.session.userId;
+  console.log(email);
+  User.find({ _id: mongoose.Types.ObjectId(email) }).then((data) => {
     res.json({
-      information: data
-    }) 
-
-  })
-  
-})
-
+      information: data,
+    });
+  });
+});
 
 router.delete("/", (req, res) => {
   req.session.destroy();
-  res.status(200).send()
+  res.status(200).send();
+});
+
+router.post("/update", (req, res) => {
+  console.log(req.body);
+  let { name, bio, img } = req.body;
+  name = name.trim();
+  const userId = req.session.userId;
+  console.log(userId)
+
+  if (name === "") {
+    res.json({
+      status: "Failed",
+      message: "Empty Input Fields",
+    });
+  } else if (bio.length > 400){
+    res.json({
+      status: "Failed",
+      message: "Bio is too long",
+    });
+  } else {
+          User.updateOne(
+              { _id: mongoose.Types.ObjectId(userId)},
+              { $set: { "name":name, "bio":bio, "img": img } }
+            )
+            .then(() => {
+              res.json({
+                status: "Success",
+                message: "Sign up completed",
+              });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
 });
 
 module.exports = router;

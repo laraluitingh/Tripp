@@ -46,19 +46,6 @@ function NavBar(props) {
             }
 
             {
-              props.isLoggedIn
-              ?<Link
-              variant="button"
-              color="text.primary"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              <LinkRouter to="/calender">Chat rooms</LinkRouter>
-            </Link>
-            :<p></p>
-            
-            }
-
-            {
               props.isLoggedIn 
               ?<Link
               variant="button"

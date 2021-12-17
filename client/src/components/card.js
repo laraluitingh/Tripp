@@ -67,6 +67,7 @@ export default function PostCard(props) {
     return axios.get(`/comment/${postObject._id}`);
   })
   .then(res => {
+    setBody("")
     setComments(res.data.result)
   })
 
@@ -147,8 +148,8 @@ export default function PostCard(props) {
           />
         )}
         <CardContent>
-          <Typography variant="body2" color="text.secondary">
-            {postObject.body}
+          <Typography variant="body2" color="text.secondary" style={{ whiteSpace: "pre-line" }}>
+            {postObject.body.split("<br/>").join("\n")}
           </Typography>
         </CardContent>
        

@@ -19,3 +19,15 @@
     justify-content: center;
     height: 87vh;
 }
+
+.bio-input{
+    width:100%
+
+}
+
+.update-profile{
+    width: 450px;
+    height: fit-content;
+    padding:15px;
+
+}
