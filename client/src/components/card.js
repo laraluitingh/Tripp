@@ -20,7 +20,7 @@ import { useState, useEffect } from "react";
 import List from "@mui/material/List";
 import Comment from "./comment";
 import axios from "axios";
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 import "../css/Post.css";
 
@@ -39,10 +39,10 @@ const ExpandMore = styled((props) => {
 export default function PostCard(props) {
   const [body, setBody] = useState("");
   const [expanded, setExpanded] = React.useState(false);
-  const postObject=props.obj;
-  const [comment, setComments] = useState([])
-  const [userLikes, setUserLikes]= useState(false)
-  const [postLikes, setPostLikes]=useState(0)
+  const postObject = props.obj;
+  const [comment, setComments] = useState([]);
+  const [userLikes, setUserLikes] = useState(false);
+  const [postLikes, setPostLikes] = useState(0);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -52,86 +52,84 @@ export default function PostCard(props) {
     const time = new Date().toISOString();
     const postId = postObject._id;
 
+    const commentForm = {
+      postId: postId,
+      body: body,
+      time: time,
+    };
 
-    const commentForm={
-        postId: postId,
-        body: body,
-        time: time,
-      };
-
-
-
-      axios
-  .post('/comment', commentForm )
-  .then(() => {
-    console.log("success")
-    return axios.get(`/comment/${postObject._id}`);
-  })
-  .then(res => {
-    setBody("")
-    setComments(res.data.result)
-  })
-
+    axios
+      .post("/comment", commentForm)
+      .then(() => {
+        console.log("success");
+        return axios.get(`/comment/${postObject._id}`);
+      })
+      .then((res) => {
+        setBody("");
+        setComments(res.data.result);
+      });
   };
+ useEffect(()=>{
+   console.log("useEffect")
+  axios.get(`/like/postLikes/${postObject._id}`).then((res) => {
+     setPostLikes(res.data.result.length);
+  });
 
- 
-    axios.get(`/like/postLikes/${postObject._id}`).then((res)=>{
-      return setPostLikes(res.data.result.length)
-  })
+  axios
+    .get(`/comment/${postObject._id}`)
+    .then((res) => {
+       setComments(res.data.result);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 
-
-
-
-    axios.get(`/comment/${postObject._id}`).then( (res)=>{
-      return setComments(res.data.result)
+  axios.get(`/like/userLikes/${postObject._id}`).then((res) => {
+    if (res.data.result.length !== 0) {
+      setUserLikes(true);
+    }else{
+      setUserLikes(false);
 
     }
-    ).catch((err)=>{
-      console.log(err)
-
-    })
+  });
 
 
-    axios.get(`/like/userLikes/${postObject._id}`).then((res)=>{
-      if(res.data.result.length!==0){
-          setUserLikes(true)
-      }
-  })
+ }, [postObject]);
+  
 
- 
+  const LikePost = () => {
+    setUserLikes(true);
+    setPostLikes(postLikes + 1);
 
-  const LikePost=()=>{
-    setUserLikes(true)
-    setPostLikes(postLikes+1)
+    axios
+      .post(`/like/${postObject._id}`)
+      .then((res) => {})
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-    axios.post(`/like/${postObject._id}`).then((res)=>{
-       
+  const unLikePost = () => {
+    setUserLikes(false);
+    setPostLikes(postLikes - 1);
 
-    }).catch((err)=>{
-        console.log(err)
-    })
-
-  }
-
-  const unLikePost=()=>{
-    setUserLikes(false)
-    setPostLikes(postLikes-1)
-
-    axios.delete(`/like/${postObject._id}`).then((res)=>{
-        
-    }).catch((err)=>{
-        console.log(err)
-    })
-
-  }
-
+    axios
+      .delete(`/like/${postObject._id}`)
+      .then((res) => {})
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <div className="AllPosts">
       <Card sx={{ mb: 3 }} id="post">
         <CardHeader
           avatar={
-            <Avatar alt={postObject.userId.name} src="/static/images/avatar/1.jpg" />
+            <Avatar
+              alt={postObject.userId.name}
+              src="/static/images/avatar/1.jpg"
+            />
           }
           action={
             <IconButton aria-label="settings">
@@ -152,19 +150,35 @@ export default function PostCard(props) {
           />
         )}
         <CardContent>
-          <Typography variant="body2" color="text.secondary" style={{ whiteSpace: "pre-line" }}>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            style={{ whiteSpace: "pre-line" }}
+          >
             {postObject.body.split("<br/>").join("\n")}
           </Typography>
         </CardContent>
 
-       
-            {userLikes
-            ? <IconButton aria-label="add to favorites" onClick={()=>{unLikePost()}}>
-                <FavoriteIcon/>
-                </IconButton>
-        :  <IconButton aria-label="add to favorites" onClick={()=>{LikePost()}}>
+        {userLikes ? (
+          <IconButton
+            aria-label="add to favorites"
+            onClick={() => {
+              unLikePost();
+            }}
+          >
+            <FavoriteIcon />
+          </IconButton>
+        ) : (
+          <IconButton
+            aria-label="add to favorites"
+            onClick={() => {
+              LikePost();
+            }}
+          >
             <FavoriteBorderIcon />
-            </IconButton>}<span>{postLikes} Likes</span>
+          </IconButton>
+        )}
+        <span>{postLikes} Likes</span>
         <div id="comment">
           <TextField
             id="outlined-basic"
@@ -208,11 +222,13 @@ export default function PostCard(props) {
                 maxHeight: 350,
               }}
             >
-            {comment.length!==0 
-            ? comment.map(function(object, i){
-                return <Comment obj={object} key={i}/>
-               })
-               :<p>No comments</p>}
+              {comment.length !== 0 ? (
+                comment.map(function (object, i) {
+                  return <Comment obj={object} key={i} />;
+                })
+              ) : (
+                <p>No comments</p>
+              )}
             </List>
           </CardContent>
         </Collapse>
