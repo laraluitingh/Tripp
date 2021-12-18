@@ -8,7 +8,7 @@ const user= require("./../models/User");
 router.post("/", (req, res)=>{
     console.log(`Here is the body ${req.body}`)
 
-    let { postId ,body, time } = req.body;
+    let { postId ,body, time} = req.body;
     const userId=req.session.userId
 
     if( body.length>500){

@@ -28,7 +28,11 @@ const PostSchema = new Schema(
 
         time:{
             type:Date
-        }
+        },
+
+        deviceTime:{
+            type: String
+        },
 
     
 

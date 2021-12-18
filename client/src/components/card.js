@@ -24,6 +24,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 import "../css/Post.css";
 
+//template from https://mui.com
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
@@ -38,7 +39,7 @@ const ExpandMore = styled((props) => {
 export default function PostCard(props) {
   const [body, setBody] = useState("");
   const [expanded, setExpanded] = React.useState(false);
-  const postObject = props.obj;
+  const postObject=props.obj;
   const [comment, setComments] = useState([])
   const [userLikes, setUserLikes]= useState(false)
   const [postLikes, setPostLikes]=useState(0)
@@ -73,9 +74,16 @@ export default function PostCard(props) {
 
   };
 
-  useEffect(() => {
+ 
+    axios.get(`/like/postLikes/${postObject._id}`).then((res)=>{
+      return setPostLikes(res.data.result.length)
+  })
+
+
+
+
     axios.get(`/comment/${postObject._id}`).then( (res)=>{
-      setComments(res.data.result)
+      return setComments(res.data.result)
 
     }
     ).catch((err)=>{
@@ -83,18 +91,14 @@ export default function PostCard(props) {
 
     })
 
+
     axios.get(`/like/userLikes/${postObject._id}`).then((res)=>{
-        if(res.data.result.length!==0){
-            setUserLikes(true)
-        }
-    })
+      if(res.data.result.length!==0){
+          setUserLikes(true)
+      }
+  })
 
-    axios.get(`/like/postLikes/${postObject._id}`).then((res)=>{
-        setPostLikes(res.data.result.length)
-    })
-
-
-  }, []);
+ 
 
   const LikePost=()=>{
     setUserLikes(true)
@@ -135,7 +139,7 @@ export default function PostCard(props) {
             </IconButton>
           }
           title={postObject.userId.name}
-          subheader={postObject.time}
+          subheader={postObject.deviceTime}
         />
 
         {postObject.img !== "" && (
@@ -152,6 +156,7 @@ export default function PostCard(props) {
             {postObject.body.split("<br/>").join("\n")}
           </Typography>
         </CardContent>
+
        
             {userLikes
             ? <IconButton aria-label="add to favorites" onClick={()=>{unLikePost()}}>

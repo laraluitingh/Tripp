@@ -45,17 +45,25 @@ const handleChange = event => {
 
   const postDetails = () => {
 
-    if (image === "NoImg" || image === "") {
+    const tags = findHashtags(body);
+    const time = new Date().toISOString();
+    var currentdate = new Date(); 
+   var deviceTime = currentdate.getDate() + "-"
+              + (currentdate.getMonth()+1)  + "-" 
+              + currentdate.getFullYear() + " at "  
+              + currentdate.getHours() + ":"  
+              + currentdate.getMinutes() + ":" 
+              + currentdate.getSeconds();
 
-      const tags = findHashtags(body);
-      const time = new Date().toISOString();
+    if (image === "NoImg" || image === "") {
   
   
       const postForm = {
         body: body,
         img: "",
         tags: tags,
-        time: time
+        time: time,
+        deviceTime: deviceTime,
       };
   
       axios
@@ -95,7 +103,8 @@ const handleChange = event => {
             body: body,
             img: data.url,
             tags: tags,
-            time: time
+            time: time, 
+            deviceTime: deviceTime
           };
       
           axios

@@ -7,7 +7,7 @@ const user= require("./../models/User");
 
 router.post("/", (req, res)=>{
     console.log(`Here is the body ${req.body}`)
-    let { body, img, tags, time } = req.body;
+    let { body, img, tags, time, deviceTime} = req.body;
     const userId=req.session.userId
 
     body=body.replace(/\n/g, "<br/>");;
@@ -35,6 +35,7 @@ router.post("/", (req, res)=>{
             img,
             tags,
             time,
+            deviceTime,
           });
 
           console.log(newPost)

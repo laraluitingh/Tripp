@@ -9,6 +9,8 @@ import { Button, CardActionArea, CardActions } from '@mui/material';
 import "../css/Account.css";
 import { useNavigate } from 'react-router-dom';
 
+//template from https://mui.com
+
 function Account(props) {
   const [userInformation, setUserInformation] = useState("");
   const navigate = useNavigate();
