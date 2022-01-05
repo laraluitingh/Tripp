@@ -2,6 +2,10 @@
 
 Social Media application for world travellers to share their experericnes and connect with another. Optimised for mobile
 
+## Live Website
+
+https://trippo1000.herokuapp.com/ 
+
 ## Features
 
 - Login and sign up page
