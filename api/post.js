@@ -6,7 +6,6 @@ const user= require("./../models/User");
 
 
 router.post("/", (req, res)=>{
-    console.log(`Here is the body ${req.body}`)
     let { body, img, tags, time, deviceTime} = req.body;
     const userId=req.session.userId
 
@@ -25,9 +24,6 @@ router.post("/", (req, res)=>{
           })
 
     }else{
-      console.log("got here")
-      console.log(typeof sessionId)
-      console.log(img)
 
         const newPost = new Post({
           userId,
@@ -37,8 +33,6 @@ router.post("/", (req, res)=>{
             time,
             deviceTime,
           });
-
-          console.log(newPost)
 
           newPost.save().then((result) => {
             res.status(201).send()

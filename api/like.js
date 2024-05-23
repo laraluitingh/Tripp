@@ -15,10 +15,7 @@ router.post("/:postId", (req, res)=>{
           userId,
           });
 
-          console.log(newLike)
-
           newLike.save().then((result) => {
-           console.log("succes")
             }).catch(err=>{
                 res.json({
                     status: "Failed",
@@ -32,7 +29,6 @@ router.delete("/:postId", (req, res)=>{
     const postId=req.params.postId
     const userId=req.session.userId
     Like.remove({'userId': userId,'postId': postId}).then((result) => {
-           console.log("succes")
             }).catch(err=>{
                 res.json({
                     status: "Failed",

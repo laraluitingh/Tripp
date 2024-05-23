@@ -8,7 +8,6 @@ const mongoose = require("mongoose");
 const ObjectId=mongoose.ObjectId
 
 router.post("/signup", (req, res) => {
-  console.log(req.body);
   let { name, email, password } = req.body;
   name = name.trim();
   email = email.trim();
@@ -81,7 +80,6 @@ router.post("/signup", (req, res) => {
 });
 
 router.post("/signin", (req, res) => {
-  console.log(req.body);
   let { email, password } = req.body;
   email = email.trim();
   password = password.trim();
@@ -145,7 +143,6 @@ router.get("/session", (req, res) => {
 
 router.get("/information", (req, res) => {
   const email = req.session.userId;
-  console.log(email);
   User.find({ _id: mongoose.Types.ObjectId(email) }).then((data) => {
     res.json({
       information: data,
@@ -159,11 +156,9 @@ router.delete("/", (req, res) => {
 });
 
 router.post("/update", (req, res) => {
-  console.log(req.body);
   let { name, bio, img } = req.body;
   name = name.trim();
   const userId = req.session.userId;
-  console.log(userId)
 
   if (name === "") {
     res.json({

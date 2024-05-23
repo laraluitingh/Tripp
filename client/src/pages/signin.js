@@ -53,11 +53,9 @@ function SignIn(props) {
     };
 
   axios.post('/user/signin', checkData).then((res) => {
-      console.log(res.data)
       const passed=res.data.status
       const message=res.data.message
       const errorMessage=document.getElementById('errorMessage')
-      console.log(errorMessage)
       if(passed==="Failed"){
         setErrorMessage(message)
       }else if(passed==="Success"){

@@ -61,7 +61,6 @@ export default function PostCard(props) {
     axios
       .post("/comment", commentForm)
       .then(() => {
-        console.log("success");
         return axios.get(`/comment/${postObject._id}`);
       })
       .then((res) => {
@@ -70,7 +69,6 @@ export default function PostCard(props) {
       });
   };
  useEffect(()=>{
-   console.log("useEffect")
   axios.get(`/like/postLikes/${postObject._id}`).then((res) => {
      setPostLikes(res.data.result.length);
   });

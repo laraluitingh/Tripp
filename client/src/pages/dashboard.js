@@ -35,7 +35,6 @@ function Dashboard() {
   }, []);
 
   function searchHashTag(e){
-console.log(searchValue)
 if(searchValue!==""){
   e.preventDefault()
   axios.get(`post/getHashes/${searchValue}`).then((res)=>{

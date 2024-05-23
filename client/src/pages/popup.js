@@ -21,7 +21,6 @@ const Popup = (props) => {
       result = result.map(function (s) {
         return s.trim();
       });
-      console.log(result);
       return result;
     } else {
       return [];
@@ -38,7 +37,6 @@ const handleClick = event => {
 
 
 const handleChange = event => {
-  console.log(event.target.files[0])
   setImage(event.target.files[0])
   setImageUpload(event.target.files[0].name)
 };
@@ -69,7 +67,6 @@ const handleChange = event => {
       axios
         .post("/post", postForm)
         .then(() => {
-          console.log("success");
           return axios.get(`/post`);
         })
         .then((res) => {
@@ -93,7 +90,7 @@ const handleChange = event => {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log("got here")
+
 
           const tags = findHashtags(body);
           const time = new Date().toISOString();
@@ -110,7 +107,6 @@ const handleChange = event => {
           axios
             .post("/post", postForm)
             .then(() => {
-              console.log("success");
               return axios.get(`/post`);
             })
             .then((res) => {

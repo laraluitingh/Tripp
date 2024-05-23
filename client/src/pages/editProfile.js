@@ -17,7 +17,6 @@ function UpdateAccount() {
 
   useEffect(() => {
     axios.get(`/user/information`).then((res) => {
-      console.log(res.data);
       setName(res.data.information[0].name);
       setBio(res.data.information[0].bio);
     });
@@ -30,7 +29,6 @@ function UpdateAccount() {
   };
 
   const handleChange = (event) => {
-    console.log(event.target.files[0]);
     setImage(event.target.files[0]);
     setImageUpload(event.target.files[0].name);
   };
@@ -44,7 +42,6 @@ function UpdateAccount() {
       };
 
       axios.post("/user/update", updateUserForm).then(() => {
-        console.log("success");
       }).then(()=>{
         navigate("/account")
       });
@@ -59,7 +56,6 @@ function UpdateAccount() {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log("got here");
           const time = new Date().toISOString();
 
           const updateUserForm = {
@@ -69,7 +65,6 @@ function UpdateAccount() {
           };
 
           axios.post("/user/update", updateUserForm).then(() => {
-            console.log("success");
           }).then(()=>{
             navigate("/account")
           });

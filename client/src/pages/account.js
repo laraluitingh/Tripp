@@ -19,14 +19,12 @@ function Account(props) {
 
   useEffect(() => {
     axios.get(`/user/information`).then((res) => {
-      console.log(res.data)
       setUserInformation(res.data.information[0])
     });
   }, []);
 
   function logOut(){
     axios.delete('/user').then(()=>{
-      console.log("succes")
       
       return axios('/user/session')
 
