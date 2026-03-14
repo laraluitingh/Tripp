@@ -1,11 +1,9 @@
 import { Link as LinkRouter } from 'react-router-dom';
 
-import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
 import logo from '../assets/logo.png'
 
 import '../css/navBar.css';
@@ -36,27 +34,16 @@ function NavBar(props) {
           <nav>
             {
               props.isLoggedIn
-              ?<Link
-              variant="button"
-              color="text.primary"
-              sx={{ my: 1, mx: 1.5 }}>
-              <LinkRouter to="/dashboard">Dashboard</LinkRouter>
-            </Link>
-            :<p></p>
+              ? <LinkRouter to="/dashboard" style={{ textDecoration: 'none', color: 'inherit', margin: '0 12px' }}>Dashboard</LinkRouter>
+              : <p></p>
             }
 
             {
               props.isLoggedIn 
-              ?<Link
-              variant="button"
-              color="text.primary"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              <LinkRouter to="/account">Account</LinkRouter>
-            </Link>
-            :<Button variant="outlined" sx={{ my: 1, mx: 1.5 }}>
-          <LinkRouter to="/signIn">Login</LinkRouter>
-          </Button>
+              ? <LinkRouter to="/account" style={{ textDecoration: 'none', color: 'inherit', margin: '0 12px' }}>Account</LinkRouter>
+              : <Button variant="outlined" sx={{ my: 1, mx: 1.5 }}>
+                  <LinkRouter to="/signIn" style={{ textDecoration: 'none', color: 'inherit' }}>Login</LinkRouter>
+                </Button>
             }
           
           </nav>

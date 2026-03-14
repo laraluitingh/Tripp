@@ -1,20 +1,19 @@
 import * as React from "react";
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
 import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { blue } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { getSelectUtilityClasses, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import { Button } from "@mui/material";
 import { useState, useEffect } from "react";
 import List from "@mui/material/List";
@@ -37,6 +36,24 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function PostCard(props) {
+      const [anchorEl, setAnchorEl] = useState(null);
+      const open = Boolean(anchorEl);
+      const handleMenuClick = (event) => {
+        setAnchorEl(event.currentTarget);
+      };
+      const handleMenuClose = () => {
+        setAnchorEl(null);
+      };
+    const deletePost = () => {
+      axios.delete(`/post/${postObject._id}`)
+        .then(() => {
+          // Optionally refresh posts or notify parent
+          window.location.reload();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
   const [body, setBody] = useState("");
   const [expanded, setExpanded] = React.useState(false);
   const postObject = props.obj;
@@ -121,111 +138,108 @@ export default function PostCard(props) {
 
   return (
     <div className="AllPosts">
-      <Card sx={{ mb: 3 }} id="post">
+      <Card sx={{ mb: 3, borderRadius: 3, boxShadow: '0 2px 12px rgba(0,0,0,0.08)', maxWidth: 600, width: '100%' }} id="post">
         <CardHeader
           avatar={
             <Avatar
               alt={postObject.userId.name}
               src="/static/images/avatar/1.jpg"
+              sx={{ width: 44, height: 44, fontWeight: 700 }}
             />
           }
           action={
-            <IconButton aria-label="settings">
-              <MoreVertIcon />
-            </IconButton>
+            <>
+              <IconButton aria-label="settings" onClick={handleMenuClick}>
+                <MoreVertIcon />
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleMenuClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+              >
+                <MenuItem
+                  onClick={() => { deletePost(); handleMenuClose(); }}
+                  sx={{ color: 'error.main' }}
+                >
+                  Delete Post
+                </MenuItem>
+              </Menu>
+            </>
           }
-          title={postObject.userId.name}
-          subheader={postObject.deviceTime}
+          title={<Typography fontWeight={600}>{postObject.userId.name}</Typography>}
+          subheader={<Typography variant="caption" color="text.secondary">{postObject.deviceTime}</Typography>}
         />
 
         {postObject.img !== "" && (
           <CardMedia
             className="image-post"
             component="img"
-            height="194"
             image={postObject.img}
-            alt="Paella dish"
+            alt="Post image"
+            sx={{ maxHeight: 400, objectFit: 'cover' }}
           />
         )}
-        <CardContent>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            style={{ whiteSpace: "pre-line" }}
-          >
+
+        <CardContent sx={{ pb: 1 }}>
+          <Typography variant="body1" style={{ whiteSpace: "pre-line", lineHeight: 1.7 }}>
             {postObject.body.split("<br/>").join("\n")}
           </Typography>
         </CardContent>
 
-        {userLikes ? (
+        {/* Like & comment bar */}
+        <CardContent sx={{ pt: 0, pb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
           <IconButton
-            aria-label="add to favorites"
-            onClick={() => {
-              unLikePost();
-            }}
+            aria-label="like"
+            onClick={() => userLikes ? unLikePost() : LikePost()}
+            sx={{ color: userLikes ? 'error.main' : 'text.secondary' }}
           >
-            <FavoriteIcon />
+            {userLikes ? <FavoriteIcon /> : <FavoriteBorderIcon />}
           </IconButton>
-        ) : (
-          <IconButton
-            aria-label="add to favorites"
-            onClick={() => {
-              LikePost();
-            }}
-          >
-            <FavoriteBorderIcon />
-          </IconButton>
-        )}
-        <span>{postLikes} Likes</span>
-        <div id="comment">
-          <TextField
-            id="outlined-basic"
-            variant="outlined"
-            size="small"
-            sx={{ ml: 1 }}
-            style={{ width: "80%" }}
-            onChange={(e) => {
-              setBody(e.target.value);
-            }}
-            value={body}
-          />{" "}
-          <Button
-            variant="outlined"
-            sx={{ ml: 1 }}
-            onClick={() => postDetails()}
-            className="comment-button"
-          >
-            Comment
-          </Button>
-        </div>
-        <div>
+          <Typography variant="body2" color="text.secondary" sx={{ mr: 2 }}>{postLikes} {postLikes === 1 ? 'Like' : 'Likes'}</Typography>
           <ExpandMore
             expand={expanded}
             onClick={handleExpandClick}
             aria-expanded={expanded}
-            aria-label="show more"
+            aria-label="show comments"
+            sx={{ ml: 'auto' }}
           >
             <ExpandMoreIcon />
           </ExpandMore>
-        </div>
+          <Typography variant="body2" color="text.secondary">{comment.length} {comment.length === 1 ? 'Comment' : 'Comments'}</Typography>
+        </CardContent>
+
+        {/* Comment input */}
+        <CardContent sx={{ pt: 0, display: 'flex', gap: 1, alignItems: 'center' }}>
+          <TextField
+            fullWidth
+            variant="outlined"
+            size="small"
+            placeholder="Write a comment..."
+            onChange={(e) => setBody(e.target.value)}
+            value={body}
+            sx={{ borderRadius: 2 }}
+          />
+          <Button
+            variant="contained"
+            disableElevation
+            onClick={() => postDetails()}
+            sx={{ borderRadius: 2, whiteSpace: 'nowrap' }}
+          >
+            Post
+          </Button>
+        </CardContent>
+
         <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <CardContent>
-            <List
-              sx={{
-                width: "100%",
-                maxWidth: 360,
-                bgcolor: "background.paper",
-                position: "relative",
-                overflow: "auto",
-                maxHeight: 350,
-              }}
-            >
+          <CardContent sx={{ pt: 0 }}>
+            <List sx={{ width: '100%', overflow: 'auto', maxHeight: 300 }}>
               {comment.length !== 0 ? (
                 comment.map(function (object, i) {
                   return <Comment obj={object} key={i} />;
                 })
               ) : (
-                <p>No comments</p>
+                <Typography variant="body2" color="text.secondary" sx={{ pl: 1 }}>No comments yet</Typography>
               )}
             </List>
           </CardContent>

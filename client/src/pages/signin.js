@@ -39,7 +39,7 @@ function Copyright(props) {
 const theme = createTheme();
 
 function SignIn(props) {
-  const { isLoggedIn, setIsLoggedIn } = props;
+  const { setIsLoggedIn } = props;
   const navigate = useNavigate();
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -55,7 +55,6 @@ function SignIn(props) {
   axios.post('/user/signin', checkData).then((res) => {
       const passed=res.data.status
       const message=res.data.message
-      const errorMessage=document.getElementById('errorMessage')
       if(passed==="Failed"){
         setErrorMessage(message)
       }else if(passed==="Success"){

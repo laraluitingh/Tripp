@@ -1,11 +1,9 @@
 .backgound-account{
-    background-image: url("../assets/dashboard-picture.png");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    height: 100vh;
-    color: white;
+     background-color: #e3f2fd;
+    min-height:100vh;
     font-family: 'Open Sans', sans-serif;
+    background-attachment: scroll;
+
 }
 
 .profile{

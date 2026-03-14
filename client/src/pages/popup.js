@@ -11,11 +11,11 @@ import CloseIcon from '@mui/icons-material/Close';
 const Popup = (props) => {
   const [body, setBody] = useState("");
   const [image, setImage] = useState("");
-  const { allPost, setallPost } = props;
+  const { setallPost } = props;
   const [imageUpload, setImageUpload]=useState("No image, chosen yet")
 
   function findHashtags(searchText) {
-    var regexp = /(\s|^)\#\w\w+\b/gm;
+    var regexp = /(\s|^)#\w\w+\b/gm;
     let result = searchText.match(regexp);
     if (result) {
       result = result.map(function (s) {
@@ -26,8 +26,6 @@ const Popup = (props) => {
       return [];
     }
   }
-
-  const realFileBtn = document.getElementById("real-file");
 
 const hiddenFileInput = React.useRef(null);
 
@@ -165,15 +163,16 @@ const handleChange = event => {
             ref={hiddenFileInput}
             onChange={handleChange}
           />
-           <Button variant="text" id="custom-button" onClick={handleClick} >Choose an image</Button> <span id="custom-text">{imageUpload}</span>
-          <a
+          <Button variant="text" id="custom-button" onClick={handleClick}>Choose an image</Button> <span id="custom-text">{imageUpload}</span>
+          <button
+            type="button"
             onClick={() => {
               deleteImage();
             }}
             className="delete-button"
           >
             Delete
-          </a>
+          </button>
         </Box>
         <Box>
           <Button variant="contained" onClick={() => postDetails()}>

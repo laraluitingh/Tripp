@@ -8,8 +8,7 @@
 }
 
 .backgound-dashboard{
-    background-image: url("../assets/dashboard-img.png");
-    background-size: 100%;
+    background-color: #e3f2fd;
     min-height:100vh;
     font-family: 'Open Sans', sans-serif;
     background-attachment: scroll;

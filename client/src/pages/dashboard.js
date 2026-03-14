@@ -73,8 +73,8 @@ if(searchValue!==""){
         value={searchValue}
         onChange={(e)=>{setSearchValue(e.target.value)}}
       />
-      <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
-        <SearchIcon onClick={(e)=>{searchHashTag(e)}}/>
+      <IconButton type="submit" sx={{ p: '10px' }} aria-label="search" onClick={(e)=>{searchHashTag(e)}}>
+        <SearchIcon />
       </IconButton>
     </Paper>
    </Box>

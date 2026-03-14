@@ -1,5 +1,16 @@
 const express = require("express");
 const router = express.Router();
+// Delete a post by ID
+router.delete('/:id', (req, res) => {
+  const postId = req.params.id;
+  Post.findByIdAndDelete(postId)
+    .then(() => {
+      res.status(200).json({ status: 'Success', message: 'Post deleted' });
+    })
+    .catch(err => {
+      res.status(500).json({ status: 'Failed', message: 'Error deleting post' });
+    });
+});
 
 const Post = require("./../models/post");
 const user= require("./../models/User");
