@@ -9,6 +9,7 @@ import Account from "./pages/account";
 import Dashboard from "./pages/dashboard";
 import NavBar from "./components/navBar";
 import UpdateAccount from "./pages/editProfile";
+import UserProfile from "./pages/userProfile";
 
 import "./css/App.css";
 
@@ -46,6 +47,7 @@ function App() {
           />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="updateAccount" element={<UpdateAccount />} />
+          <Route path="profile/:id" element={<UserProfile />} />
         </Routes>
       </Router>
     </>

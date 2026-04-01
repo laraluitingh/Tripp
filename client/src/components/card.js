@@ -20,6 +20,7 @@ import List from "@mui/material/List";
 import Comment from "./comment";
 import axios from "axios";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { useNavigate } from "react-router-dom";
 
 import "../css/Post.css";
 
@@ -36,6 +37,7 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function PostCard(props) {
+      const navigate = useNavigate();
       const [anchorEl, setAnchorEl] = useState(null);
       const open = Boolean(anchorEl);
       const handleMenuClick = (event) => {
@@ -143,8 +145,9 @@ export default function PostCard(props) {
           avatar={
             <Avatar
               alt={postObject.userId.name}
-              src="/static/images/avatar/1.jpg"
-              sx={{ width: 44, height: 44, fontWeight: 700 }}
+              src={postObject.userId.img || "/static/images/avatar/1.jpg"}
+              sx={{ width: 44, height: 44, fontWeight: 700, cursor: "pointer" }}
+              onClick={() => navigate(`/profile/${postObject.userId._id}`)}
             />
           }
           action={
@@ -168,7 +171,15 @@ export default function PostCard(props) {
               </Menu>
             </>
           }
-          title={<Typography fontWeight={600}>{postObject.userId.name}</Typography>}
+          title={
+            <Typography
+              fontWeight={600}
+              sx={{ cursor: "pointer", "&:hover": { textDecoration: "underline" } }}
+              onClick={() => navigate(`/profile/${postObject.userId._id}`)}
+            >
+              {postObject.userId.name}
+            </Typography>
+          }
           subheader={<Typography variant="caption" color="text.secondary">{postObject.deviceTime}</Typography>}
         />
 

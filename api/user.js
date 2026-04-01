@@ -187,4 +187,15 @@ router.post("/update", (req, res) => {
         }
 });
 
+// Public profile for any user
+router.get('/profile/:id', (req, res) => {
+  const mongoose = require('mongoose');
+  User.findById(req.params.id, ['name', 'bio', 'img'])
+    .then((user) => {
+      if (!user) return res.status(404).json({ status: 'Failed', message: 'User not found' });
+      res.json({ user });
+    })
+    .catch(() => res.status(500).json({ status: 'Failed' }));
+});
+
 module.exports = router;

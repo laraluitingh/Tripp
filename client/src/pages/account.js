@@ -2,9 +2,13 @@ import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Typography from '@mui/material/Typography';
-import { Button, Avatar, Box, Divider, Paper } from '@mui/material';
+import {
+  Button, Avatar, Box, Divider, Paper,
+  Dialog, DialogTitle, DialogContent, List, ListItem, ListItemAvatar, ListItemText
+} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import LogoutIcon from '@mui/icons-material/Logout';
+import PeopleIcon from '@mui/icons-material/People';
 import "../css/Account.css";
 import { useNavigate } from 'react-router-dom';
 
@@ -12,13 +16,20 @@ import { useNavigate } from 'react-router-dom';
 
 function Account(props) {
   const [userInformation, setUserInformation] = useState("");
+  const [counts, setCounts] = useState({ followers: 0, following: 0 });
+  const [followList, setFollowList] = useState([]);
+  const [followListTitle, setFollowListTitle] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
   const navigate = useNavigate();
   const { setIsLoggedIn } = props;
 
-
   useEffect(() => {
     axios.get(`/user/information`).then((res) => {
-      setUserInformation(res.data.information[0])
+      const info = res.data.information[0];
+      setUserInformation(info);
+      if (info?._id) {
+        axios.get(`/follow/counts/${info._id}`).then((r) => setCounts(r.data));
+      }
     });
   }, []);
 
@@ -42,8 +53,23 @@ function Account(props) {
 
   function editAccount(){
     navigate('/updateAccount')
-
   }
+
+  const openFollowers = () => {
+    axios.get(`/follow/followers/${userInformation._id}`).then((res) => {
+      setFollowList(res.data.result.map((r) => r.followerId));
+      setFollowListTitle("Followers");
+      setDialogOpen(true);
+    });
+  };
+
+  const openFollowing = () => {
+    axios.get(`/follow/following/${userInformation._id}`).then((res) => {
+      setFollowList(res.data.result.map((r) => r.followingId));
+      setFollowListTitle("Following");
+      setDialogOpen(true);
+    });
+  };
 
   return (
     <div className="backgound-account">
@@ -75,6 +101,19 @@ function Account(props) {
                 ? userInformation.bio
                 : "Edit your profile to write something about yourself"}
             </Typography>
+
+            {/* Follower / Following counts */}
+            <Box display="flex" justifyContent="center" gap={3} mt={3} mb={1}>
+              <Box sx={{ cursor: "pointer", textAlign: "center" }} onClick={openFollowers}>
+                <Typography variant="h6" fontWeight={700}>{counts.followers}</Typography>
+                <Typography variant="caption" color="text.secondary">Followers</Typography>
+              </Box>
+              <Divider orientation="vertical" flexItem />
+              <Box sx={{ cursor: "pointer", textAlign: "center" }} onClick={openFollowing}>
+                <Typography variant="h6" fontWeight={700}>{counts.following}</Typography>
+                <Typography variant="caption" color="text.secondary">Following</Typography>
+              </Box>
+            </Box>
           </Box>
 
           {/* Actions */}
@@ -101,6 +140,36 @@ function Account(props) {
           </Box>
         </Paper>
       </Box>
+
+      {/* Followers / Following Dialog */}
+      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} fullWidth maxWidth="xs">
+        <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <PeopleIcon /> {followListTitle}
+        </DialogTitle>
+        <DialogContent dividers>
+          {followList.length === 0 ? (
+            <Typography color="text.secondary" py={2} textAlign="center">Nobody here yet</Typography>
+          ) : (
+            <List disablePadding>
+              {followList.map((user) => (
+                <ListItem
+                  key={user._id}
+                  sx={{ cursor: "pointer", borderRadius: 2, "&:hover": { bgcolor: "grey.100" } }}
+                  onClick={() => { setDialogOpen(false); navigate(`/profile/${user._id}`); }}
+                >
+                  <ListItemAvatar>
+                    <Avatar
+                      src={user.img || "https://www.pngkey.com/png/detail/282-2820067_taste-testing-at-baskin-robbins-empty-profile-picture.png"}
+                      alt={user.name}
+                    />
+                  </ListItemAvatar>
+                  <ListItemText primary={user.name} />
+                </ListItem>
+              ))}
+            </List>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

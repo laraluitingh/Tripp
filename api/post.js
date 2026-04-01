@@ -60,7 +60,7 @@ router.post("/", (req, res)=>{
 
 
 router.get("/", (req, res)=>{
- Post.find().sort({time: -1}).populate({path:'userId', select:['name']}).then((result) => {
+ Post.find().sort({time: -1}).populate({path:'userId', select:['name', 'img']}).then((result) => {
   res.json({
     result
   }) 
@@ -75,7 +75,7 @@ router.get("/", (req, res)=>{
 router.get("/getHashes/:word" , (req, res)=>{
   const word=req.params.word
   var regexObj = new RegExp(" /.*" + word + ".*/"); 
-  Post.find({ tags:  new RegExp(`#${word}`, 'i')} ).then((result) => {
+  Post.find({ tags:  new RegExp(`#${word}`, 'i')} ).populate({path:'userId', select:['name','img']}).then((result) => {
    res.json({
      result
    }) 
@@ -87,5 +87,14 @@ router.get("/getHashes/:word" , (req, res)=>{
     })
  })
 
+
+// Get all posts by a specific user
+router.get('/user/:id', (req, res) => {
+  Post.find({ userId: req.params.id })
+    .sort({ time: -1 })
+    .populate({ path: 'userId', select: ['name', 'img'] })
+    .then((result) => res.json({ result }))
+    .catch(() => res.status(500).json({ status: 'Failed' }));
+});
 
 module.exports = router;

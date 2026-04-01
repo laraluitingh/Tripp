@@ -19,6 +19,7 @@ const UserRouter = require('./api/user')
 const PostRouter= require('./api/post')
 const CommentRouter= require('./api/comment')
 const LikeRouter= require('./api/like')
+const FollowRouter = require('./api/follow')
 
 mongoose.connect( process.env.MONGODB_URI, {
     useNewUrlParser: true,
@@ -49,6 +50,7 @@ app.use('/user', UserRouter)
 app.use('/post', PostRouter)
 app.use('/comment', CommentRouter)
 app.use('/like', LikeRouter)
+app.use('/follow', FollowRouter)
 
 // Step 1:
 app.use(express.static(path.resolve(__dirname, "./client/build")));
