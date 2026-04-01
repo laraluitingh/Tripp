@@ -10,7 +10,9 @@ import { Box } from "@mui/system";
 
 function UpdateAccount() {
   const [name, setName] = useState();
+  const [nameError, setNameError] = useState(false);
   const [bio, setBio] = useState();
+  const [bioError, setBioError] = useState(false);
   const navigate = useNavigate();
   const [image, setImage] = useState("");
   const [imageUpload, setImageUpload] = useState("No image, chosen yet");
@@ -45,6 +47,20 @@ function UpdateAccount() {
   };
 
   function updateInfo() {
+    let hasError = false;
+    if (!name || name.trim() === "") {
+      setNameError(true);
+      hasError = true;
+    } else {
+      setNameError(false);
+    }
+    if (!bio || bio.trim() === "") {
+      setBioError(true);
+      hasError = true;
+    } else {
+      setBioError(false);
+    }
+    if (hasError) return;
     if (image === "NoImg" || image === "") {
       const updateUserForm = {
         name: name,
@@ -100,8 +116,10 @@ function UpdateAccount() {
           <TextField
             required
             fullWidth
-            onChange={(e) => { setName(e.target.value); }}
+            onChange={(e) => { setName(e.target.value); setNameError(false); }}
             value={name || ""}
+            error={nameError}
+            helperText={nameError ? "Name is required" : ""}
             sx={{ mb: 3 }}
           />
 
@@ -112,8 +130,10 @@ function UpdateAccount() {
             fullWidth
             multiline
             rows={5}
-            onChange={(e) => { setBio(e.target.value); }}
+            onChange={(e) => { setBio(e.target.value); setBioError(false); }}
             value={bio || ""}
+            error={bioError}
+            helperText={bioError ? "Bio is required" : ""}
             sx={{ mb: 3 }}
           />
 
