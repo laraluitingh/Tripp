@@ -112,7 +112,7 @@ function UserProfile() {
 
   return (
     <Box className="backgound-account" sx={{ minHeight: "100vh" }}>
-      <Box sx={{ maxWidth: 640, mx: "auto", px: 2, pt: 10, pb: 6 }}>
+      <Box sx={{ maxWidth: 800, mx: "auto", px: 2, pt: 10, pb: 6 }}>
 
         {/* Back button */}
         <Box mb={2}>

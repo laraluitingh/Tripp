@@ -140,7 +140,7 @@ export default function PostCard(props) {
 
   return (
     <div className="AllPosts">
-      <Card sx={{ mb: 3, borderRadius: 3, boxShadow: '0 2px 12px rgba(0,0,0,0.08)', maxWidth: 600, width: '100%' }} id="post">
+      <Card sx={{ mb: 3, borderRadius: 3, boxShadow: '0 2px 12px rgba(0,0,0,0.08)', width: '100%' }} id="post">
         <CardHeader
           avatar={
             <Avatar

@@ -3,7 +3,7 @@
 .AllPosts{
     display: flex;
     justify-content: center;
-
+    width: 100%;
 }
 
 #comment{
@@ -13,7 +13,7 @@
 }
 
 div#post{
-    width: 35%;
+    width: 100%;
 }
 
 .image-post{
@@ -22,7 +22,7 @@ div#post{
 
 @media screen and (max-width: 800px) {
     div#post{
-      width: 80%
+      width: 100%
     }
   }
 
