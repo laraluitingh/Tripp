@@ -9,9 +9,12 @@ const mongoose = require ('mongoose')
 const cors = require('cors');
 const path = require("path");
 
+app.set('trust proxy', 1);
 
-
-app.use(express.static("./client/build"));
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 
 app.use(express.json())
 
@@ -33,18 +36,20 @@ mongoose.connect( process.env.MONGODB_URI, {
 const store= new MongoDBStore({
   uri : process.env.MONGODB_URI, 
   collection: 'Mysessions'
-  
 })
 
 app.use(session({
   secret: "key that will sign cookie",
   resave: false,
-  httpOnly: false,
   saveUninitialized: false,
-  store: store
+  store: store,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    maxAge: 1000 * 60 * 60 * 24 * 7
+  }
 }))
-
-app.use(bodyParser())
 
 app.use('/user', UserRouter)
 app.use('/post', PostRouter)
@@ -52,17 +57,10 @@ app.use('/comment', CommentRouter)
 app.use('/like', LikeRouter)
 app.use('/follow', FollowRouter)
 
-// Step 1:
 app.use(express.static(path.resolve(__dirname, "./client/build")));
-// Step 2:
 app.get("/*splat", function (request, response) {
   response.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
 });
-
-
-
-app.use(cors());
-
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
