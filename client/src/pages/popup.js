@@ -4,12 +4,15 @@ import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import { Alert } from "@mui/material";
 import { useState} from "react";
 import axios from "axios";
 import CloseIcon from '@mui/icons-material/Close';
 
 const Popup = (props) => {
   const [body, setBody] = useState("");
+  const [bodyError, setBodyError] = useState("");
+  const [postError, setPostError] = useState("");
   const [image, setImage] = useState("");
   const { setallPost } = props;
   const [imageUpload, setImageUpload]=useState("No image, chosen yet")
@@ -40,6 +43,12 @@ const handleChange = event => {
 };
 
   const postDetails = () => {
+    if (!body || body.trim() === "") {
+      setBodyError("Post cannot be empty.");
+      return;
+    }
+    setBodyError("");
+    setPostError("");
 
     const tags = findHashtags(body);
     const time = new Date().toISOString();
@@ -52,71 +61,33 @@ const handleChange = event => {
               + currentdate.getSeconds();
 
     if (image === "NoImg" || image === "") {
-  
-  
-      const postForm = {
-        body: body,
-        img: "",
-        tags: tags,
-        time: time,
-        deviceTime: deviceTime,
-      };
-  
-      axios
-        .post("/post", postForm)
-        .then(() => {
+      const postForm = { body, img: "", tags, time, deviceTime };
+      axios.post("/post", postForm)
+        .then((res) => {
+          if (res.data?.status === "Failed") { setPostError(res.data.message); return; }
           return axios.get(`/post`);
         })
-        .then((res) => {
-          setallPost(res.data.result);
-          props.handleClose()
-    
-        }).catch((err) => {
-      console.log(err);
-    });
-      
-      
-      
+        .then((res) => { if (res) { setallPost(res.data.result); props.handleClose(); } })
+        .catch(() => setPostError("Failed to create post. Please try again."));
     } else {
       const data = new FormData();
       data.append("file", image);
       data.append("upload_preset", "Trippo");
       data.append("cloud_name", "dbfuan4g6");
-      fetch("https://api.cloudinary.com/v1_1/dbfuan4g6/image/upload", {
-        method: "post",
-        body: data,
-      })
+      fetch("https://api.cloudinary.com/v1_1/dbfuan4g6/image/upload", { method: "post", body: data })
         .then((res) => res.json())
         .then((data) => {
-
-
-          const tags = findHashtags(body);
-          const time = new Date().toISOString();
-      
-      
-          const postForm = {
-            body: body,
-            img: data.url,
-            tags: tags,
-            time: time, 
-            deviceTime: deviceTime
-          };
-      
-          axios
-            .post("/post", postForm)
-            .then(() => {
+          if (!data.url) { setPostError("Image upload failed. Please try again."); return; }
+          const postForm = { body, img: data.url, tags: findHashtags(body), time: new Date().toISOString(), deviceTime };
+          axios.post("/post", postForm)
+            .then((res) => {
+              if (res.data?.status === "Failed") { setPostError(res.data.message); return; }
               return axios.get(`/post`);
             })
-            .then((res) => {
-              setallPost(res.data.result);
-              props.handleClose()
-        
-            });
-
+            .then((res) => { if (res) { setallPost(res.data.result); props.handleClose(); } })
+            .catch(() => setPostError("Failed to create post. Please try again."));
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch(() => setPostError("Image upload failed. Please try again."));
     }
   };
 
@@ -147,13 +118,15 @@ const handleChange = event => {
             label="What's on your mind?"
             multiline
             rows={13}
-            onChange={(e) => {
-              setBody(e.target.value);
-            }}
+            inputProps={{ maxLength: 950 }}
+            onChange={(e) => { setBody(e.target.value); setBodyError(""); }}
             value={body}
             variant="standard"
+            error={!!bodyError}
+            helperText={bodyError || `${body.length}/950`}
           />
         </FormControl>
+        {postError && <Alert severity="error" sx={{ mt: 1 }}>{postError}</Alert>}
         <Box>
           <input
             type="file"

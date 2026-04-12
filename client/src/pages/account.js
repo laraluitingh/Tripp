@@ -9,14 +9,17 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PeopleIcon from '@mui/icons-material/People';
+import GridOnIcon from '@mui/icons-material/GridOn';
 import "../css/Account.css";
 import { useNavigate } from 'react-router-dom';
+import PostCard from '../components/card';
 
 //template from https://mui.com
 
 function Account(props) {
   const [userInformation, setUserInformation] = useState("");
   const [counts, setCounts] = useState({ followers: 0, following: 0 });
+  const [posts, setPosts] = useState([]);
   const [followList, setFollowList] = useState([]);
   const [followListTitle, setFollowListTitle] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -29,6 +32,7 @@ function Account(props) {
       setUserInformation(info);
       if (info?._id) {
         axios.get(`/follow/counts/${info._id}`).then((r) => setCounts(r.data));
+        axios.get(`/post/user/${info._id}`).then((r) => setPosts(r.data.result));
       }
     });
   }, []);
@@ -73,8 +77,8 @@ function Account(props) {
 
   return (
     <div className="backgound-account">
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', minHeight: '100vh', pt: 10, px: 2 }}>
-        <Paper elevation={4} sx={{ width: '100%', maxWidth: 480, borderRadius: 4, overflow: 'hidden' }}>
+      <Box sx={{ maxWidth: 800, mx: 'auto', px: 2, pt: 10, pb: 6 }}>
+        <Paper elevation={4} sx={{ width: '100%', borderRadius: 4, overflow: 'hidden' }}>
           {/* Cover / Banner */}
           <Box sx={{ height: 120, background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)' }} />
 
@@ -139,6 +143,20 @@ function Account(props) {
             </Button>
           </Box>
         </Paper>
+
+        {/* Posts section */}
+        <Box display="flex" alignItems="center" gap={1} mt={4} mb={2}>
+          <GridOnIcon fontSize="small" color="action" />
+          <Typography variant="h6" fontWeight={700}>My Posts</Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ ml: 'auto' }}>{posts.length} {posts.length === 1 ? 'post' : 'posts'}</Typography>
+        </Box>
+        {posts.length === 0 ? (
+          <Paper elevation={0} sx={{ textAlign: 'center', py: 6, borderRadius: 4, bgcolor: 'white', border: '1px dashed #ccc' }}>
+            <Typography color="text.secondary">No posts yet</Typography>
+          </Paper>
+        ) : (
+          posts.map((post, i) => <PostCard obj={post} key={i} />)
+        )}
       </Box>
 
       {/* Followers / Following Dialog */}

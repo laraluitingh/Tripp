@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
-import { Button, CardActions, Divider, Typography } from "@mui/material";
+import { Alert, Button, CardActions, Divider, Typography } from "@mui/material";
 import "../css/Account.css";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
@@ -13,6 +13,7 @@ function UpdateAccount() {
   const [nameError, setNameError] = useState(false);
   const [bio, setBio] = useState();
   const [bioError, setBioError] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const navigate = useNavigate();
   const [image, setImage] = useState("");
   const [imageUpload, setImageUpload] = useState("No image, chosen yet");
@@ -61,17 +62,12 @@ function UpdateAccount() {
       setBioError(false);
     }
     if (hasError) return;
+    setSaveError("");
     if (image === "NoImg" || image === "") {
-      const updateUserForm = {
-        name: name,
-        bio: bio,
-        img: "",
-      };
-
-      axios.post("/user/update", updateUserForm).then(() => {
-      }).then(()=>{
-        navigate("/account")
-      });
+      const updateUserForm = { name, bio, img: "" };
+      axios.post("/user/update", updateUserForm)
+        .then(() => navigate("/account"))
+        .catch(() => setSaveError("Failed to save changes. Please try again."));
     } else {
       const data = new FormData();
       data.append("file", image);
@@ -83,19 +79,13 @@ function UpdateAccount() {
       })
         .then((res) => res.json())
         .then((data) => {
-          // Removed unused variable 'time'
-
-          const updateUserForm = {
-            name: name,
-            bio: bio,
-            img: data.url,
-          };
-
-          axios.post("/user/update", updateUserForm).then(() => {
-          }).then(()=>{
-            navigate("/account")
-          });
-        });
+          if (!data.url) { setSaveError("Image upload failed. Please try again."); return; }
+          const updateUserForm = { name, bio, img: data.url };
+          axios.post("/user/update", updateUserForm)
+            .then(() => navigate("/account"))
+            .catch(() => setSaveError("Failed to save changes. Please try again."));
+        })
+        .catch(() => setSaveError("Image upload failed. Please try again."));
     }
   }
 
@@ -129,11 +119,12 @@ function UpdateAccount() {
             id="standard-multiline-flexible"
             fullWidth
             multiline
-            rows={5}
+            rows={7}
+            inputProps={{ maxLength: 500 }}
             onChange={(e) => { setBio(e.target.value); setBioError(false); }}
             value={bio || ""}
             error={bioError}
-            helperText={bioError ? "Bio is required" : ""}
+            helperText={bioError ? "Bio is required" : `${(bio || "").length}/500`}
             sx={{ mb: 3 }}
           />
 
@@ -168,6 +159,7 @@ function UpdateAccount() {
             </Box>
           )}
 
+          {saveError && <Alert severity="error" sx={{ mb: 2 }}>{saveError}</Alert>}
           <Divider sx={{ mb: 2 }} />
           <CardActions sx={{ p: 0, gap: 2 }}>
             <Button color="inherit" variant="outlined" fullWidth onClick={() => navigate("/account")} sx={{ borderRadius: 2, py: 1.2 }}>
