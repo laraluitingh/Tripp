@@ -59,6 +59,17 @@ export default function PostCard(props) {
   const [body, setBody] = useState("");
   const [expanded, setExpanded] = React.useState(false);
   const postObject = props.obj;
+  const highlight = props.highlight || "";
+
+  function highlightText(text, term) {
+    if (!term || term.trim() === "") return text;
+    const parts = text.split(new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'));
+    return parts.map((part, i) =>
+      part.toLowerCase() === term.toLowerCase()
+        ? <mark key={i} style={{ backgroundColor: '#fff176', borderRadius: 2, padding: '0 2px' }}>{part}</mark>
+        : part
+    );
+  }
   const [comment, setComments] = useState([]);
   const [userLikes, setUserLikes] = useState(false);
   const [postLikes, setPostLikes] = useState(0);
@@ -195,7 +206,7 @@ export default function PostCard(props) {
 
         <CardContent sx={{ pb: 1 }}>
           <Typography variant="body1" style={{ whiteSpace: "pre-line", lineHeight: 1.7 }}>
-            {postObject.body.split("<br/>").join("\n")}
+            {highlightText(postObject.body.split("<br/>").join("\n"), highlight)}
           </Typography>
         </CardContent>
 

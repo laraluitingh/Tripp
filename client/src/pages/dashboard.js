@@ -18,6 +18,7 @@ function Dashboard() {
   const [isOpen, setIsOpen] = useState(false);
   const [allPost, setallPost]=useState([])
   const [searchValue, setSearchValue]=useState("")
+  const [activeSearch, setActiveSearch]=useState("")
 
 
   const togglePopup = () => {
@@ -35,18 +36,17 @@ function Dashboard() {
   }, []);
 
   function searchHashTag(e){
-if(searchValue!==""){
-  e.preventDefault()
+    e.preventDefault()
+if(searchValue!=""){
   axios.get(`post/getHashes/${searchValue}`).then((res)=>{
     setallPost(res.data.result)
-
+    setActiveSearch(searchValue)
   })
 
 }else{
-  e.preventDefault()
   axios.get("/post").then((res)=>{
     setallPost(res.data.result)
-
+    setActiveSearch("")
   })
 
 }
@@ -68,8 +68,8 @@ if(searchValue!==""){
     >
       <InputBase
         sx={{ ml: 1, flex: 1 }}
-        placeholder="Search Hashtags"
-        inputProps={{ 'aria-label': 'search for tags' }}
+        placeholder="Search posts or #hashtags"
+        inputProps={{ 'aria-label': 'search posts' }}
         value={searchValue}
         onChange={(e)=>{setSearchValue(e.target.value)}}
       />
@@ -81,7 +81,7 @@ if(searchValue!==""){
    </div>
    <Box sx={{ maxWidth: 600, mx: "auto", width: "100%", px: 2 }}>
      {allPost.map(function(object, i){
-       return <PostCard obj={object} key={i} />
+       return <PostCard obj={object} key={i} highlight={activeSearch} />
      })}
    </Box>
   

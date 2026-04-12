@@ -73,19 +73,19 @@ router.get("/", (req, res)=>{
 })
 
 router.get("/getHashes/:word" , (req, res)=>{
-  const word=req.params.word
-  var regexObj = new RegExp(" /.*" + word + ".*/"); 
-  Post.find({ tags:  new RegExp(`#${word}`, 'i')} ).populate({path:'userId', select:['name','img']}).then((result) => {
-   res.json({
-     result
-   }) 
-    }).catch(err=>{
-        res.json({
-            status: "Failed",
-            message: "Issue occured when post was created",
-          });
-    })
- })
+  const word = req.params.word;
+  const searchRegex = new RegExp(word, 'i');
+  Post.find({
+    $or: [
+      { tags: new RegExp(`#${word}`, 'i') },
+      { body: searchRegex }
+    ]
+  }).populate({ path: 'userId', select: ['name', 'img'] }).then((result) => {
+    res.json({ result });
+  }).catch(() => {
+    res.json({ status: "Failed", message: "Issue occurred when searching posts" });
+  });
+})
 
 
 // Get all posts by a specific user
