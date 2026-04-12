@@ -55,7 +55,7 @@ app.use('/follow', FollowRouter)
 // Step 1:
 app.use(express.static(path.resolve(__dirname, "./client/build")));
 // Step 2:
-app.get("*", function (request, response) {
+app.get("/*splat", function (request, response) {
   response.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
 });
 
