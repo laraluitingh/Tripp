@@ -4,7 +4,7 @@ FROM node:16-alpine AS client-build
 WORKDIR /app/client
 
 COPY client/package.json ./
-RUN npm install --legacy-peer-deps
+RUN npm install --legacy-peer-deps && npm install ajv@^8 --legacy-peer-deps
 
 COPY client/ ./
 RUN npx react-scripts build
