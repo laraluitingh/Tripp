@@ -7,7 +7,7 @@ COPY client/package.json ./
 RUN npm install --legacy-peer-deps
 
 COPY client/ ./
-RUN npm run build
+RUN npx react-scripts build
 
 
 # Stage 2: Run Express server
