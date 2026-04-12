@@ -7,7 +7,7 @@ COPY client/package.json ./
 RUN npm install --legacy-peer-deps
 
 COPY client/ ./
-RUN NODE_OPTIONS=--openssl-legacy-provider npm run build
+RUN npm run build
 
 
 # Stage 2: Run Express server
