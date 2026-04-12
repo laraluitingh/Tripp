@@ -32,7 +32,7 @@
     "express": "latest",
     "express-session": "latest",
     "formik": "latest",
-    "mongoose": "latest",
+    "mongoose": "^8",
     "morgan": "latest",
     "multer": "latest"
   },
@@ -41,6 +41,6 @@
     "nodemon": "latest"
   },
   "engines": {
-    "node": "16.x"
+    "node": "18.x"
   }
 }

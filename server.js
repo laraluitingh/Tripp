@@ -24,10 +24,7 @@ const CommentRouter= require('./api/comment')
 const LikeRouter= require('./api/like')
 const FollowRouter = require('./api/follow')
 
-mongoose.connect( process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-}).then(()=>{
+mongoose.connect( process.env.MONGODB_URI).then(()=>{
     console.log("DB connected")
 }).catch((err)=>{
     console.log(err)
