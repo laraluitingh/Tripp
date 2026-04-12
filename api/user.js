@@ -143,7 +143,7 @@ router.get("/session", (req, res) => {
 
 router.get("/information", (req, res) => {
   const email = req.session.userId;
-  User.find({ _id: mongoose.Types.ObjectId(email) }).then((data) => {
+  User.find({ _id: new mongoose.Types.ObjectId(email) }).then((data) => {
     res.json({
       information: data,
     });
@@ -165,14 +165,14 @@ router.post("/update", (req, res) => {
       status: "Failed",
       message: "Empty Input Fields",
     });
-  } else if (bio.length > 400){
+  } else if (bio.length > 500){
     res.json({
       status: "Failed",
       message: "Bio is too long",
     });
   } else {
           User.updateOne(
-              { _id: mongoose.Types.ObjectId(userId)},
+              { _id: new mongoose.Types.ObjectId(userId)},
               { $set: { "name":name, "bio":bio, "img": img } }
             )
             .then(() => {

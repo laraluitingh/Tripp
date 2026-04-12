@@ -37,7 +37,7 @@ function Dashboard() {
 
   function searchHashTag(e){
     e.preventDefault()
-if(searchValue!=""){
+if(searchValue!==""){
   axios.get(`post/getHashes/${searchValue}`).then((res)=>{
     setallPost(res.data.result)
     setActiveSearch(searchValue)

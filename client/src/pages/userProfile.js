@@ -4,7 +4,7 @@ import axios from "axios";
 import {
   Avatar, Box, Button, Dialog, DialogTitle, DialogContent, IconButton,
   Divider, List, ListItem, ListItemAvatar, ListItemText, Paper,
-  Typography, CircularProgress, Tooltip, Skeleton
+  Typography, Tooltip, Skeleton
 } from "@mui/material";
 import PeopleIcon from "@mui/icons-material/People";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
